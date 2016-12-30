@@ -9,6 +9,16 @@
   file: path='{{ elasticsearch_data_path }}' state=directory owner=elasticsearch group=elasticsearch
   when: elasticsearch_data_path is defined
 
+- name: list installed plugins
+  command: /usr/share/elasticsearch/bin/plugin list
+  register: es_plugins
+
+- name: install ES plugins
+  command: '/usr/share/elasticsearch/bin/plugin install {{ item }}'
+  when: es_plugins.stdout.find('{{ item }}') == -1
+  with_items: '{{ elasticsearch_plugins|default([]) }}'
+
+
 - name: Configure Elasticsearch.
   template:
     src: elasticsearch.yml.j2
