@@ -1,4 +1,5 @@
 ---
+elasticsearch_config_tpl: _default_elasticsearch.yml.j2
 elasticsearch_network_host: localhost
 elasticsearch_http_port: 9200
 elasticsearch_script_inline: true
