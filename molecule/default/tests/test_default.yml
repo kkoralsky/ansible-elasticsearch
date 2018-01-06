@@ -1,0 +1,22 @@
+package:
+  elasticsearch:
+    installed: true
+    versions:
+    - 2.4.6
+service:
+  elasticsearch:
+    enabled: true
+    running: true
+user:
+  elasticsearch:
+    exists: true
+    uid: 102
+    gid: 102
+    groups:
+    - elasticsearch
+    home: /home/elasticsearch
+    shell: /bin/false
+group:
+  elasticsearch:
+    exists: true
+    gid: 102
