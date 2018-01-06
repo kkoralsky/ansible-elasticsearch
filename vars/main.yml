@@ -1,0 +1,4 @@
+---
+_version_str: '{{ elasticsearch_version|string }}'
+version_major: '{{ _version_str.split(".")|first }}'
+version_with_asterisk: '{{ elasticsearch_version }}*'

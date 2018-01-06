@@ -1,9 +1,19 @@
 ---
-- include: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- include: install-java.yml
 
-- include: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
+- name: Add Elasticsearch apt key.
+  apt_key:
+    url: https://packages.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: Add Elasticsearch repository.
+  apt_repository:
+    repo: 'deb http://packages.elastic.co/elasticsearch/{{ version_major }}.x/debian stable main'
+    state: present
+    update_cache: true
+
+- name: Install Elasticsearch.
+  apt: pkg='elasticsearch={{ version_with_asterisk }}' state=present
 
 - name: Create data dir
   file: path='{{ elasticsearch_data_path }}' state=directory owner=elasticsearch group=elasticsearch
@@ -12,12 +22,12 @@
 - name: list installed plugins
   command: /usr/share/elasticsearch/bin/plugin list
   register: es_plugins
+  changed_when: false
 
 - name: install ES plugins
   command: '/usr/share/elasticsearch/bin/plugin install {{ item }}'
   when: es_plugins.stdout.find('{{ item }}') == -1
   with_items: '{{ elasticsearch_plugins|default([]) }}'
-
 
 - name: Configure Elasticsearch.
   template:
