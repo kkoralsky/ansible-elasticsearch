@@ -1,6 +1,9 @@
 ---
 - include: install-java.yml
 
+- name: ensure GPG is installed before adding GPG apt key
+  apt: pkg=gpg state=present
+
 - name: Add Elasticsearch apt key.
   apt_key:
     url: https://packages.elastic.co/GPG-KEY-elasticsearch
@@ -13,7 +16,7 @@
     update_cache: true
 
 - name: Install Elasticsearch.
-  apt: pkg='elasticsearch={{ version_with_asterisk }}' state=present
+  apt: pkg='elasticsearch={{ elasticsearch_version }}*' state=present
 
 - name: Create data dir
   file: path='{{ elasticsearch_data_path }}' state=directory owner=elasticsearch group=elasticsearch
