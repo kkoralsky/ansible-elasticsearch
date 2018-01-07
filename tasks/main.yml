@@ -2,7 +2,7 @@
 - include: install-java.yml
 
 - name: ensure GPG is installed before adding GPG apt key
-  apt: pkg=gpg state=present
+  apt: pkg=gnupg state=present
 
 - name: Add Elasticsearch apt key.
   apt_key:
