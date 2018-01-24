@@ -1,5 +1,5 @@
 ---
-- include: install-java.yml
+- include_tasks: install-java.yml
 
 - name: ensure GPG is installed before adding GPG apt key
   apt: pkg=gnupg state=present
@@ -19,17 +19,18 @@
   apt: pkg='elasticsearch={{ elasticsearch_version }}*' state=present
 
 - name: Create data dir
-  file: path='{{ elasticsearch_data_path }}' state=directory owner=elasticsearch group=elasticsearch
+  file: path='{{ elasticsearch_data_path }}' state=directory
+        owner=elasticsearch group=elasticsearch
   when: elasticsearch_data_path is defined
 
 - name: list installed plugins
-  command: /usr/share/elasticsearch/bin/plugin list
+  shell: /usr/share/elasticsearch/bin/*plugin list
   register: es_plugins
   changed_when: false
 
 - name: install ES plugins
-  command: '/usr/share/elasticsearch/bin/plugin install {{ item }}'
-  when: es_plugins.stdout.find('{{ item }}') == -1
+  shell: '/usr/share/elasticsearch/bin/*plugin install {{ item }}'
+  when: es_plugins.stdout.find(item) == -1
   with_items: '{{ elasticsearch_plugins|default([]) }}'
 
 - name: Configure Elasticsearch.
